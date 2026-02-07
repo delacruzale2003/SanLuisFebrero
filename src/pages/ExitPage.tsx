@@ -85,7 +85,7 @@ const ExitPage = () => {
             <img
                 src="/pws_sanluis.png"
                 alt="Logo"
-                className="w-40 sm:w-60 h-auto mb-10 sm:mb-2" 
+                className="w-60 sm:w-60 h-auto mb-10 sm:mb-2" 
             />
 
             
@@ -104,7 +104,7 @@ const ExitPage = () => {
                             // h-36 (altura fija en móvil, aprox 144px) evita que sea gigante.
                             // sm:h-auto (en escritorio deja que crezca).
                             // max-w-[80%] asegura que no toque los bordes.
-                            className="h-60 sm:h-auto w-auto max-w-[80%] sm:max-w-full object-contain  animate-bounce-slow" 
+                            className="h-85 sm:h-auto w-auto max-w-[80%] sm:max-w-full object-contain  animate-bounce-slow" 
                         />
                     ) : (
                         <div className='flex items-center justify-center text-white font-bold italic animate-pulse text-sm sm:text-base'>

@@ -58,132 +58,143 @@ const RegisterPage: React.FC = () => {
                 />
 
                 {/* Contenedor del Formulario */}
-                <form
-                    id="registrationForm"
-                    onSubmit={handleSubmit}
-                    // W-[90%] para móviles, max-w-sm para que no se estire en tablets
-                    className="relative bg-transparent border-2 border-black rounded-3xl p-4 pt-10 w-[90%] max-w-sm space-y-3 sm:space-y-4 mb-2 shadow-sm"
+               <form
+    id="registrationForm"
+    onSubmit={handleSubmit}
+    // W-[90%] para móviles, max-w-sm para que no se estire en tablets
+    className="relative bg-transparent border-2 border-black rounded-3xl p-4 pt-10 w-[90%] max-w-sm space-y-3 sm:space-y-4 mb-2 shadow-sm"
+>
+    {/* --- IMAGEN TÍTULO EN EL BORDE SUPERIOR --- */}
+    <img
+        src="/registrate.png"
+        alt="Regístrate"
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-10 xs:h-12 sm:h-14 object-contain w-62"
+    />
+
+    {message && (
+        <p className="text-center text-xs font-medium p-2 bg-red-100 text-red-700 rounded-lg mt-2 leading-tight">
+            {message}
+        </p>
+    )}
+
+    {/* --- INPUTS --- */}
+    <div className="mt-2 space-y-3 sm:space-y-4">
+
+        {/* INPUT: NOMBRES */}
+        <div>
+            <h2 className="text-lg text-[#afafaf] xs:text-base font-mont-bold mb-2 leading-4 mt-4">
+                Llena tus datos y participa <br />por fabulosos premios
+            </h2>
+            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
+                Nombres y apellidos
+            </label>
+            <input
+                type="text"
+                name="name"
+                required
+                disabled={loading}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={45}
+                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
+            />
+        </div>
+
+        {/* INPUT: DNI (MEJORADO) */}
+        <div>
+            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
+                Número de DNI
+            </label>
+            <input
+                type="tel" // CAMBIO: "tel" para mejor teclado en Android/iOS
+                inputMode="numeric" // CAMBIO: Fuerza teclado numérico
+                name="dni"
+                value={dni}
+                disabled={loading}
+                onChange={(e) => {
+                    // CAMBIO: Filtra letras automáticamente
+                    const val = e.target.value.replace(/\D/g, '');
+                    setDni(val);
+                }}
+                maxLength={11}
+                required
+                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
+            />
+        </div>
+
+        {/* INPUT: TELEFONO (MEJORADO) */}
+        <div>
+            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
+                Teléfono
+            </label>
+            <input
+                type="tel"
+                inputMode="numeric" // CAMBIO: Fuerza teclado numérico
+                name="phone_number"
+                required
+                disabled={loading}
+                value={phoneNumber}
+                onChange={(e) => {
+                    // CAMBIO: Filtra letras automáticamente
+                    const val = e.target.value.replace(/\D/g, '');
+                    setPhoneNumber(val);
+                }}
+                maxLength={9}
+                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
+            />
+        </div>
+
+        {/* INPUT: ARCHIVO (MEJORADO CON TEXTO DE AYUDA) */}
+        <div>
+            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
+                Foto de Voucher
+            </label>
+
+            <div className={`mt-1 ${preview ? 'flex flex-row items-center gap-2' : ''}`}>
+                <input
+                    type="file"
+                    id="photo-upload"
+                    name="photo_url"
+                    // CAMBIO: Lista explícita para bloquear videos y GIFs en el sistema
+                    accept=".jpg, .jpeg, .png, .webp, .heic, .heif"
+                    required
+                    disabled={loading}
+                    onChange={handleFileChange}
+                    className="hidden"
+                />
+
+                <label
+                    htmlFor="photo-upload"
+                    // Agregué 'flex-col' para apilar el texto nuevo debajo del botón
+                    className={`cursor-pointer flex flex-col items-center justify-center rounded-2xl border-2 border-black text-black font-mont-extrabold leading-none tracking-tight uppercase transition-colors 
+                        ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black hover:text-white'}
+                        ${preview
+                            ? 'flex-1 h-20 text-xs px-1 text-center' // Si hay preview
+                            : 'w-full py-2 xs:py-3 px-4 text-sm xs:text-base sm:text-lg' // Si no hay preview
+                        }`}
                 >
-                    {/* --- IMAGEN TÍTULO EN EL BORDE SUPERIOR --- */}
-                    <img
-                        src="/registrate.png"
-                        alt="Regístrate"
-                        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-10 xs:h-12 sm:h-14 object-contain w-62"
-                    />
+                    <span>SELECCIONAR ARCHIVO</span>
+                    
+                    {/* CAMBIO: Texto de ayuda visual */}
+                    <span className={`font-mont-regular mt-1 opacity-60 normal-case ${preview ? 'text-[9px] leading-tight' : 'text-[10px] xs:text-xs'}`}>
+                        (Solo fotos - Máx 15MB)
+                    </span>
+                </label>
 
-                    {message && (
-                        <p className="text-center text-xs font-medium p-2 bg-red-100 text-red-700 rounded-lg mt-2 leading-tight">
-                            {message}
-                        </p>
-                    )}
-
-                    {/* --- INPUTS --- */}
-                    <div className="mt-2 space-y-3 sm:space-y-4">
-                        
-                        {/* INPUT: NOMBRES */}
-                        <div>
-                            <h2 className="text-lg text-[#afafaf] xs:text-base font-mont-bold mb-2 leading-4 mt-4">
-                                Llena tus datos y participa <br />por fabulosos premios
-                            </h2>
-                            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
-                                Nombres y apellidos
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                required
-                                disabled={loading}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                maxLength={45}
-                                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
-                            />
-                        </div>
-
-                        {/* INPUT: DNI */}
-                        <div>
-                            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
-                                Número de DNI
-                            </label>
-                            <input
-                                type="text"
-                                name="dni"
-                                value={dni}
-                                disabled={loading}
-                                onChange={(e) => setDni(e.target.value)}
-                                maxLength={11}
-                                required
-                                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
-                            />
-                        </div>
-
-                        {/* INPUT: TELEFONO */}
-                        <div>
-                            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
-                                Teléfono
-                            </label>
-                            <input
-                                type="tel"
-                                name="phone_number"
-                                required
-                                disabled={loading}
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                maxLength={9}
-                                className="bg-transparent border-2 border-black py-2 xs:py-2.5 px-4 w-full rounded-full text-black text-sm xs:text-base placeholder-black/70 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors shadow-inner disabled:opacity-50"
-                            />
-                        </div>
-
-                        {/* INPUT: ARCHIVO (MODIFICADO FLEX) */}
-                        <div>
-                            <label className="block text-[#afafaf] text-md xs:text-base font-mont-bold">
-                                Foto de Voucher
-                            </label>
-                            
-                            {/* CONTENEDOR FLEXIBLE:
-                                Si hay preview -> flex row (lado a lado).
-                                Si no hay preview -> block (normal).
-                            */}
-                            <div className={`mt-1 ${preview ? 'flex flex-row items-center gap-2' : ''}`}>
-                                <input
-                                    type="file"
-                                    id="photo-upload"
-                                    name="photo_url"
-                                    accept="image/*"
-                                    required
-                                    disabled={loading}
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-                                
-                                {/* BOTÓN: Se ajusta al 50% (flex-1) si hay imagen, o 100% (w-full) si no */}
-                                <label
-                                    htmlFor="photo-upload"
-                                    className={`cursor-pointer flex items-center justify-center rounded-full border-2 border-black text-black font-mont-extrabold leading-none tracking-tight uppercase transition-colors 
-                                    ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black hover:text-white'}
-                                    ${preview 
-                                        ? 'flex-1 h-20 text-xs px-2 text-center' // Si hay foto: altura fija para igualar imagen y texto pequeño
-                                        : 'w-full py-2 xs:py-3 px-4 text-sm xs:text-base sm:text-lg' // Si no: ancho completo normal
-                                    }`}
-                                >
-                                    SELECCIONAR ARCHIVO
-                                </label>
-
-                                {/* PREVIEW: Ocupa el otro 50% (flex-1) y altura fija */}
-                                {preview && (
-                                    <div className="relative flex-1 h-20 border-2 border-gray-300 rounded-xl overflow-hidden shadow-md bg-white">
-                                        <img src={preview} alt="preview" className="object-cover w-full h-full" />
-                                        {compressing && (
-                                            <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-                                                <Loader2 className="animate-spin w-6 h-6 text-white" />
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                {preview && (
+                    <div className="relative flex-1 h-20 border-2 border-gray-300 rounded-xl overflow-hidden shadow-md bg-white">
+                        <img src={preview} alt="preview" className="object-cover w-full h-full" />
+                        {compressing && (
+                            <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+                                <Loader2 className="animate-spin w-6 h-6 text-white" />
                             </div>
-                        </div>
+                        )}
                     </div>
-                </form>
+                )}
+            </div>
+        </div>
+    </div>
+</form>
 
                 {/* BARRA FIJA INFERIOR */}
                 <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 z-20 flex justify-center pointer-events-none bg-gradient-to-t from-white/10 to-transparent">
